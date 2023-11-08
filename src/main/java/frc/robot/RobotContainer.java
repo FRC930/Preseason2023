@@ -27,6 +27,7 @@ public class RobotContainer {
   CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
   SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withIsOpenLoop(true); // I want field-centric
                                                                                             // driving in open loop
+  SwerveRequest.RobotCentric straightDrive = new SwerveRequest.RobotCentric().withIsOpenLoop(true);
   SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   Telemetry logger = new Telemetry(MaxSpeed);
@@ -41,12 +42,25 @@ public class RobotContainer {
             .withRotationalDeadband(JOYSTICK_ROTATIONAL_DEADBAND)
         ));
 
+    joystick.pov(0).whileTrue(
+      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.5 * MaxSpeed * PERCENT_SPEED).withVelocityY(0.0)
+      ));
+    joystick.pov(180).whileTrue(
+      drivetrain.applyRequest(() -> straightDrive.withVelocityX(-0.5 * MaxSpeed * PERCENT_SPEED).withVelocityY(0.0)
+      ));
+    joystick.pov(90).whileTrue(
+      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.0).withVelocityY(-0.5 * MaxSpeed * PERCENT_SPEED)
+      ));
+    joystick.pov(270).whileTrue(
+      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.0).withVelocityY(0.5 * MaxSpeed * PERCENT_SPEED)
+      ));
+
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick.b().whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
     if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
   }
