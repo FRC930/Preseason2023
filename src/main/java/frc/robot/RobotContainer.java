@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 
 public class RobotContainer {
+  private static final double JOYSTICK_DEADBAND = 0.1;
+  private static final double JOYSTICK_ROTATIONAL_DEADBAND = 0.1;
+  private static final double PERCENT_SPEED = 0.3;
   final double MaxSpeed = 6; // 6 meters per second desired top speed
   final double MaxAngularRate = Math.PI; // Half a rotation per second max angular velocity
 
@@ -30,10 +33,12 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * PERCENT_SPEED) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withVelocityY(-joystick.getLeftX() * MaxSpeed * PERCENT_SPEED) // Drive left with negative X (left)
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withDeadband(JOYSTICK_DEADBAND)
+            .withRotationalDeadband(JOYSTICK_ROTATIONAL_DEADBAND)
         ));
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
