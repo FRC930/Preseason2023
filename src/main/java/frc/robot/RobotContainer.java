@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.SwerveDrivetrainSubsystem;
 
 public class RobotContainer {
   private static final double JOYSTICK_DEADBAND = 0.1;
@@ -24,7 +25,7 @@ public class RobotContainer {
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+  SwerveDrivetrainSubsystem drivetrain = TunerConstants.DriveTrain; // My drivetrain
   SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withIsOpenLoop(true); // I want field-centric
                                                                                             // driving in open loop
   SwerveRequest.RobotCentric straightDrive = new SwerveRequest.RobotCentric().withIsOpenLoop(true);
