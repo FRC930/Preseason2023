@@ -10,52 +10,66 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.SwerveDrivetrainSubsystem;
 
 public class TunerConstants {
-    static class CustomSlotGains extends Slot0Configs {
-        public CustomSlotGains(double kP, double kI, double kD, double kV, double kS) {
-            this.kP = kP;
-            this.kI = kI;
-            this.kD = kD;
-            this.kV = kV;
-            this.kS = kS;
-        }
-    }
+    // Both sets of gains need to be tuned to your individual robot
+    // The steer motor uses MotionMagicVoltage control
+    private static final Slot0Configs steerGains = new Slot0Configs()
+        .withKP(100).withKI(0).withKD(0.05)
+        .withKS(0).withKV(1.5).withKA(0);
+    // When using closed-loop control, the drive motor uses:
+    // - VelocityVoltage, if DrivetrainConstants.SupportsPro is false (default)
+    // - VelocityTorqueCurrentFOC, if DrivetrainConstants.SupportsPro is true
+    private static final Slot0Configs driveGains = new Slot0Configs()
+        .withKP(3).withKI(0).withKD(0)
+        .withKS(0).withKV(0).withKA(0);
 
-    private static final CustomSlotGains steerGains = new CustomSlotGains(100, 0, 0.05, 0, 0);
-    private static final CustomSlotGains driveGains = new CustomSlotGains(3, 0, 0, 0, 0);
+    // The stator current at which the wheels start to slip;
+    // This needs to be tuned to your individual robot
+    private static final double kSlipCurrentA = 300.0;
 
+    // Theoretical free speed (m/s) at 12v applied output;
+    // This needs to be tuned to your individual robot
+    private static final double kSpeedAt12VoltsMps = 6.0;
+
+    // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
+    // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 0.0;
     
     private static final double kDriveGearRatio = 8.16;
     private static final double kSteerGearRatio = 12.8;
     private static final double kWheelRadiusInches = 2;
-    private static final int kPigeonId = 13;
     private static final boolean kSteerMotorReversed = false;
-    private static final String kCANbusName = "CANBUS";
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
 
+    private static final String kCANbusName = "CANBUS";
+    private static final int kPigeonId = 13;
 
+
+    // These are only used for simulation
     private static double kSteerInertia = 0.00001;
     private static double kDriveInertia = 0.001;
 
     private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
             .withPigeon2Id(kPigeonId)
             .withCANbusName(kCANbusName);
+            //TODO TRY .withSupportsPro(true);
 
     private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
             .withDriveMotorGearRatio(kDriveGearRatio)
             .withSteerMotorGearRatio(kSteerGearRatio)
             .withWheelRadius(kWheelRadiusInches)
-            .withSlipCurrent(800)
+            .withSlipCurrent(kSlipCurrentA)
             .withSteerMotorGains(steerGains)
             .withDriveMotorGains(driveGains)
-            .withSpeedAt12VoltsMps(6) // Theoretical free speed is 10 meters per second at 12v applied output
+            .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps)
             .withSteerInertia(kSteerInertia)
             .withDriveInertia(kDriveInertia)
             .withFeedbackSource(SwerveModuleSteerFeedbackType.FusedCANcoder)
-            .withCouplingGearRatio(kCoupleRatio) // Every 1 rotation of the azimuth results in couple ratio drive turns
+            .withCouplingGearRatio(kCoupleRatio)
             .withSteerMotorInverted(kSteerMotorReversed);
 
+
+    // Front Left
     private static final int kFrontLeftDriveMotorId = 9;
     private static final int kFrontLeftSteerMotorId = 8;
     private static final int kFrontLeftEncoderId = 8;
@@ -63,6 +77,8 @@ public class TunerConstants {
 
     private static final double kFrontLeftXPosInches = 11;
     private static final double kFrontLeftYPosInches = 11.25;
+
+    // Front Right
     private static final int kFrontRightDriveMotorId = 11;
     private static final int kFrontRightSteerMotorId = 10;
     private static final int kFrontRightEncoderId = 10;
@@ -70,6 +86,8 @@ public class TunerConstants {
 
     private static final double kFrontRightXPosInches = 11;
     private static final double kFrontRightYPosInches = -11.25;
+
+    // Back Left
     private static final int kBackLeftDriveMotorId = 2;
     private static final int kBackLeftSteerMotorId = 1;
     private static final int kBackLeftEncoderId = 1;
@@ -77,6 +95,8 @@ public class TunerConstants {
 
     private static final double kBackLeftXPosInches = -11;
     private static final double kBackLeftYPosInches = 11.25;
+
+    // Back Right
     private static final int kBackRightDriveMotorId = 18;
     private static final int kBackRightSteerMotorId = 17;
     private static final int kBackRightEncoderId = 17;

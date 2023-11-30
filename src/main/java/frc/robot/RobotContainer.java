@@ -34,6 +34,9 @@ public class RobotContainer {
   SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   Telemetry logger = new Telemetry(MaxSpeed);
 
+  // TODO NOT sure why have
+  Pose2d odomStart = new Pose2d(0, 0, new Rotation2d(0, 0));
+
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * PERCENT_SPEED) // Drive forward with
@@ -42,7 +45,7 @@ public class RobotContainer {
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             .withDeadband(JOYSTICK_DEADBAND)
             .withRotationalDeadband(JOYSTICK_ROTATIONAL_DEADBAND)
-        ));
+        ).ignoringDisable(true));
 
     joystick.pov(0).whileTrue(
       drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.5 * MaxSpeed * PERCENT_SPEED).withVelocityY(0.0)
@@ -60,6 +63,9 @@ public class RobotContainer {
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick.b().whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+
+    // reset the field-centric heading on left bumper press
+    joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
