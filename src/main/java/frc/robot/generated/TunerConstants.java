@@ -34,7 +34,9 @@ public class TunerConstants {
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 0.0;
     
-    private static final double kDriveGearRatio = 8.16;
+    //https://www.swervedrivespecialties.com/products/mk3-swerve-module?variant=31575980703857
+    // MK3 Falcon 13.6 ft/s 8.16:1 or 16.2 ft/s 6.86:1
+    private static final double kDriveGearRatio = 6.86; // 8.16;  // 6.86
     private static final double kSteerGearRatio = 12.8;
     private static final double kWheelRadiusInches = 2;
     private static final boolean kSteerMotorReversed = false;
@@ -60,6 +62,7 @@ public class TunerConstants {
             .withWheelRadius(kWheelRadiusInches)
             .withSlipCurrent(kSlipCurrentA)
             .withSteerMotorGains(steerGains)
+            // TODO CHARACTERIZATION comment out
             .withDriveMotorGains(driveGains)
             .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps)
             .withSteerInertia(kSteerInertia)
