@@ -34,13 +34,25 @@ public class AutoCommandManager {
 
     public AutoCommandManager(boolean characterizeRobot, SwerveDrivetrainSubsystem drivetrain) {
         // slow-forward
-        Command charSlowForwardCommand = new CharacterizeAutoCommand(drivetrain,true,false,m_slowFTimeEntriesForFront,m_slowFTimeEntriesForBack);
+        Command charSlowForwardCommand = new CharacterizeAutoCommand(drivetrain,
+            true,false,
+            m_slowFTimeEntriesForFront,m_slowFTimeEntriesForBack
+            ,null, null);
         // slow-back
-        Command charSlowBackCommand = new CharacterizeAutoCommand(drivetrain,false,false,m_slowBTimeEntriesForFront,m_slowBTimeEntriesForBack);
+        Command charSlowBackCommand = new CharacterizeAutoCommand(drivetrain,
+            false,false,
+            m_slowBTimeEntriesForFront,m_slowBTimeEntriesForBack
+            ,null, null);
         // fast-forward
-        Command charFastForwardCommand = new CharacterizeAutoCommand(drivetrain,true,true,m_fastFTimeEntriesForFront,m_fastFTimeEntriesForBack);
+        Command charFastForwardCommand = new CharacterizeAutoCommand(drivetrain,
+            true,true,
+            m_fastFTimeEntriesForFront,m_fastFTimeEntriesForBack
+            ,null,null);
         // fast-back
-        Command charFastBackCommand = new CharacterizeAutoCommand(drivetrain,false,true,m_fastBTimeEntriesForFront,m_fastBTimeEntriesForBack);
+        Command charFastBackCommand = new CharacterizeAutoCommand(drivetrain,
+            false,true,
+            m_fastBTimeEntriesForFront,m_fastBTimeEntriesForBack
+            ,null,null);
         String date = new SimpleDateFormat("yyyy-MM-dd-hh-mm").format(new Date());
         Command writeJsonFileCommand = new InstantCommand(() -> {
             CharacterizeAutoCommand.writeJsonFile("sysid_data_"+date+".json",
@@ -59,7 +71,6 @@ public class AutoCommandManager {
 
         // Add commands to the autonomous command chooser
         m_chooser.setDefaultOption("None", null);
-        m_chooser.addOption("PathPlanner-S_Auto", planPlanCommand);
         if(characterizeRobot) {
             m_chooser.addOption("Initalize-Direction", initializeDirectionCommand);
             m_chooser.addOption("Slow-Forward", charSlowForwardCommand);
@@ -70,10 +81,12 @@ public class AutoCommandManager {
 
             // TODO CHARACTERIZATION: FLUDGED to zero out drivegains 
             // NOTE: MAY NOT need to since only used in closed loop
-            drivetrain.getModule(0).getDriveMotor().getConfigurator().apply(new Slot0Configs());
-            drivetrain.getModule(1).getDriveMotor().getConfigurator().apply(new Slot0Configs());
-            drivetrain.getModule(2).getDriveMotor().getConfigurator().apply(new Slot0Configs());
-            drivetrain.getModule(3).getDriveMotor().getConfigurator().apply(new Slot0Configs());
+            // drivetrain.getModule(0).getDriveMotor().getConfigurator().apply(new Slot0Configs());
+            // drivetrain.getModule(1).getDriveMotor().getConfigurator().apply(new Slot0Configs());
+            // drivetrain.getModule(2).getDriveMotor().getConfigurator().apply(new Slot0Configs());
+            // drivetrain.getModule(3).getDriveMotor().getConfigurator().apply(new Slot0Configs());
+        } else {
+            m_chooser.addOption("PathPlanner-S_Auto", planPlanCommand);
         }
 
         SmartDashboard.putData("SelectAuto", m_chooser);

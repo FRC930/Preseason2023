@@ -42,6 +42,8 @@ public class RobotContainer {
   SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   Telemetry logger = new Telemetry(MaxSpeed);
 
+  SwerveRequest.Idle idle = new SwerveRequest.Idle();
+
   // TODO NOT sure why have
   Pose2d odomStart = new Pose2d(0, 0, new Rotation2d(0, 0));
   private AutoCommandManager m_autoMgr;
@@ -53,6 +55,10 @@ public class RobotContainer {
         // also need to make drivegains not used
         DriverStation.reportWarning("IN CHARACTERIZATION MODE -- NO TELOP MODE", false);
         System.out.println("IN CHARACTERIZATION MODE -- NO TELOP MODE");
+        // NOTE: Odometry thread is updating in background with applyrequest
+        drivetrain.setDefaultCommand(drivetrain.applyRequest(() -> idle));
+        // // But sets speed to zero
+        // drivetrain.setDefaultCommand(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(0))));
     } else {
     // TODO CHARACTERIZATION comment out
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
