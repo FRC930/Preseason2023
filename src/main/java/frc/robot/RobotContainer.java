@@ -30,7 +30,7 @@ public class RobotContainer {
   private static final double JOYSTICK_ROTATIONAL_DEADBAND = 0.1;
   private static final double PERCENT_SPEED = 0.3;
   // TODO CHARACTERIZATION
-  private static final boolean CHARACTERIZE_ROBOT = true;
+  private static final boolean CHARACTERIZE_ROBOT = false;
   // MK3 Falcon 13.6 ft/s 8.16:1 or 16.2 ft/s 6.86:1
   // https://www.swervedrivespecialties.com/products/mk3-swerve-module?variant=31575980703857
   final double MaxSpeed = Units.feetToMeters(16.2); //13.6); //  meters per second desired top speed
@@ -55,7 +55,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     if(CHARACTERIZE_ROBOT) { 
-        // DONT set default command causes drive test to be jumpy
+        // DONT set default command causes drive test to be jumpy (odometry thread always running)
         // also need to make drivegains not used
         DriverStation.reportWarning("IN CHARACTERIZATION MODE -- NO TELOP MODE", false);
         System.out.println("IN CHARACTERIZATION MODE -- NO TELOP MODE");
@@ -64,7 +64,6 @@ public class RobotContainer {
         // // But sets speed to zero
         // drivetrain.setDefaultCommand(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(0))));
     } else {
-    // TODO CHARACTERIZATION comment out
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * PERCENT_SPEED) // Drive forward with
                                                                                            // negative Y (forward)

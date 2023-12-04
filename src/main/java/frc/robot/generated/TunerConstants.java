@@ -67,7 +67,7 @@ public class TunerConstants {
             .withSlipCurrent(kSlipCurrentA)
             .withSteerMotorGains(steerGains)
             // TODO CHARACTERIZATION comment out
-        //     .withDriveMotorGains(driveGains)
+            .withDriveMotorGains(driveGains)
             .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps)
             .withSteerInertia(kSteerInertia)
             .withDriveInertia(kDriveInertia)

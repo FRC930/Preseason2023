@@ -32,7 +32,7 @@ deploy {
                     //gcType = 'Other'
                     //jvmArgs.add("-XX:+UseG1GC", "-XX:MaxGCPauseMillis=1", "-XX:GCTimeRatio=1")
                     // https://github.com/wpilibsuite/GradleRIO/blob/main/src/main/java/edu/wpi/first/gradlerio/deploy/roborio/GarbageCollectorType.java
-                    gcType = 'G1'//'G1_LongPause'//'G1_Base'/...
+                    // gcType = 'G1'//'G1_LongPause'//'G1_Base'/...
                     // WHY https://github.com/wpilibsuite/GradleRIO/blob/main/src/main/java/edu/wpi/first/gradlerio/deploy/roborio/FRCJavaArtifact.java#L148 show default Serial
                 }
 
