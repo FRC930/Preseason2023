@@ -57,8 +57,9 @@ public class TunerConstants {
 
     private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
             .withPigeon2Id(kPigeonId)
+            .withSupportsPro(true)
             .withCANbusName(kCANbusName);
-            //TODO TRY .withSupportsPro(true);
+        
 
     private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
             .withDriveMotorGearRatio(kDriveGearRatio)
