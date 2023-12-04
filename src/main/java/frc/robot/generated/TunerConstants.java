@@ -19,8 +19,12 @@ public class TunerConstants {
     // - VelocityVoltage, if DrivetrainConstants.SupportsPro is false (default)
     // - VelocityTorqueCurrentFOC, if DrivetrainConstants.SupportsPro is true
     private static final Slot0Configs driveGains = new Slot0Configs()
-        .withKP(3).withKI(0).withKD(0)
-        .withKS(0).withKV(0).withKA(0);
+        // with gains commented during characterization
+        .withKP(0.078).withKI(0).withKD(0)
+        .withKS(0.2125).withKV(0.11624).withKA(0.005648);
+        // // With gains not commented
+        // .withKP(0.027).withKI(0).withKD(0)
+        // .withKS(0.15).withKV(0.11457).withKA(0.003);
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
@@ -63,7 +67,7 @@ public class TunerConstants {
             .withSlipCurrent(kSlipCurrentA)
             .withSteerMotorGains(steerGains)
             // TODO CHARACTERIZATION comment out
-            .withDriveMotorGains(driveGains)
+        //     .withDriveMotorGains(driveGains)
             .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps)
             .withSteerInertia(kSteerInertia)
             .withDriveInertia(kDriveInertia)

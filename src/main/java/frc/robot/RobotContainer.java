@@ -22,6 +22,10 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.SwerveDrivetrainSubsystem;
 
 public class RobotContainer {
+  /**
+   *
+   */
+  private static final double POV_PERCENT_SPEED = 0.3;
   private static final double JOYSTICK_DEADBAND = 0.1;
   private static final double JOYSTICK_ROTATIONAL_DEADBAND = 0.1;
   private static final double PERCENT_SPEED = 0.3;
@@ -73,16 +77,16 @@ public class RobotContainer {
     }
 
     joystick.pov(0).whileTrue(
-      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.5 * MaxSpeed * PERCENT_SPEED).withVelocityY(0.0)
+      drivetrain.applyRequest(() -> straightDrive.withVelocityX(POV_PERCENT_SPEED * MaxSpeed).withVelocityY(0.0)
       ));
     joystick.pov(180).whileTrue(
-      drivetrain.applyRequest(() -> straightDrive.withVelocityX(-0.5 * MaxSpeed * PERCENT_SPEED).withVelocityY(0.0)
+      drivetrain.applyRequest(() -> straightDrive.withVelocityX(-POV_PERCENT_SPEED * MaxSpeed).withVelocityY(0.0)
       ));
     joystick.pov(90).whileTrue(
-      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.0).withVelocityY(-0.5 * MaxSpeed * PERCENT_SPEED)
+      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.0).withVelocityY(-POV_PERCENT_SPEED * MaxSpeed)
       ));
     joystick.pov(270).whileTrue(
-      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.0).withVelocityY(0.5 * MaxSpeed * PERCENT_SPEED)
+      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.0).withVelocityY(POV_PERCENT_SPEED * MaxSpeed)
       ));
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
