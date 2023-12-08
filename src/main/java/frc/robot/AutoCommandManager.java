@@ -21,7 +21,9 @@ import frc.robot.subsystems.SwerveDrivetrainSubsystem;
 
 /** Add your docs here. */
 public class AutoCommandManager {
-    SendableChooser<Command> m_chooser = new SendableChooser<>();
+    SendableChooser<Command> m_chooserAuto = new SendableChooser<>();
+    SendableChooser<Command> m_chooserCharactization = new SendableChooser<>();
+    SendableChooser<Command> m_chooser = null;
     JSONArray m_slowFTimeEntriesForFront=new JSONArray();
     JSONArray m_slowBTimeEntriesForFront=new JSONArray();
     JSONArray m_fastFTimeEntriesForFront=new JSONArray();
@@ -70,25 +72,28 @@ public class AutoCommandManager {
         Command planPlanCommand = new PathPlannerAuto(pathName);
 
         // Add commands to the autonomous command chooser
-        m_chooser.setDefaultOption("None", null);
+        m_chooserCharactization.setDefaultOption("None", null);
+        m_chooserAuto.setDefaultOption("None", null);
+        // if(characterizeRobot) {
+            m_chooserCharactization.addOption("Initalize-Direction", initializeDirectionCommand);
+            m_chooserCharactization.addOption("Slow-Forward", charSlowForwardCommand);
+            m_chooserCharactization.addOption("Slow-Back", charSlowBackCommand);
+            m_chooserCharactization.addOption("Fast-Forward", charFastForwardCommand);
+            m_chooserCharactization.addOption("Fast-Back", charFastBackCommand);
+            m_chooserCharactization.addOption("Write-File", writeJsonFileCommand);
+        // } else {
+            m_chooserAuto.addOption("PathPlanner-S_Auto", planPlanCommand);
+        // }
+
+        setChooser(characterizeRobot);
+    }
+
+    public void setChooser(boolean characterizeRobot) {
         if(characterizeRobot) {
-            m_chooser.addOption("Initalize-Direction", initializeDirectionCommand);
-            m_chooser.addOption("Slow-Forward", charSlowForwardCommand);
-            m_chooser.addOption("Slow-Back", charSlowBackCommand);
-            m_chooser.addOption("Fast-Forward", charFastForwardCommand);
-            m_chooser.addOption("Fast-Back", charFastBackCommand);
-            m_chooser.addOption("Write-File", writeJsonFileCommand);
-
-            // TODO CHARACTERIZATION: FLUDGED to zero out drivegains 
-            // NOTE: MAY NOT need to since only used in closed loop
-            // drivetrain.getModule(0).getDriveMotor().getConfigurator().apply(new Slot0Configs());
-            // drivetrain.getModule(1).getDriveMotor().getConfigurator().apply(new Slot0Configs());
-            // drivetrain.getModule(2).getDriveMotor().getConfigurator().apply(new Slot0Configs());
-            // drivetrain.getModule(3).getDriveMotor().getConfigurator().apply(new Slot0Configs());
+            m_chooser= m_chooserCharactization;
         } else {
-            m_chooser.addOption("PathPlanner-S_Auto", planPlanCommand);
+            m_chooser= m_chooserAuto;
         }
-
         SmartDashboard.putData("SelectAuto", m_chooser);
     }
 

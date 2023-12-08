@@ -18,7 +18,7 @@ public class TunerConstants {
     // When using closed-loop control, the drive motor uses:
     // - VelocityVoltage, if DrivetrainConstants.SupportsPro is false (default)
     // - VelocityTorqueCurrentFOC, if DrivetrainConstants.SupportsPro is true
-    private static final Slot0Configs driveGains = new Slot0Configs()
+    public static final Slot0Configs driveGains = new Slot0Configs()
         // with gains commented during characterization
         .withKP(0.078).withKI(0).withKD(0)
         .withKS(0.2125).withKV(0.11624).withKA(0.005648);
