@@ -136,7 +136,8 @@ public class RobotContainer {
                 .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
                 .withDeadband(JOYSTICK_DEADBAND)
                 .withRotationalDeadband(JOYSTICK_ROTATIONAL_DEADBAND)
-            ).ignoringDisable(true));
+            // ).ignoringDisable(true)); // TODO CAUSED ISSUES with jumping driving during characterization
+            ));
           
     }
     m_autoMgr.setChooser(characterizationMode);
@@ -155,6 +156,8 @@ public class RobotContainer {
   public RobotContainer() {
     m_autoMgr = new AutoCommandManager(m_robotInCharacterizationMode, drivetrain);
     configureBindings();
+    // NOTE: Add so if did not pluggin controller warning would not appear
+    DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   public Command getAutonomousCommand() {
