@@ -1,23 +1,25 @@
 package frc.robot.generated;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SwerveModuleSteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.SwerveDrivetrainSubsystem;
 
 public class TunerConstants {
-    // Both sets of gains need to be tuned to your individual robot
-    // The steer motor uses MotionMagicVoltage control
+    // Both sets of gains need to be tuned to your individual robot.
+
+    // The steer motor uses any SwerveModule.SteerRequestType control request with the
+    // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGains = new Slot0Configs()
         .withKP(100).withKI(0).withKD(0.05)
         .withKS(0).withKV(1.5).withKA(0);
-    // When using closed-loop control, the drive motor uses:
-    // - VelocityVoltage, if DrivetrainConstants.SupportsPro is false (default)
-    // - VelocityTorqueCurrentFOC, if DrivetrainConstants.SupportsPro is true
+    // When using closed-loop control, the drive motor uses the control
+    // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     public static final Slot0Configs driveGains = new Slot0Configs()
         // with gains commented during characterization
         .withKP(0.078).withKI(0).withKD(0)
@@ -25,6 +27,14 @@ public class TunerConstants {
         // // With gains not commented
         // .withKP(0.027).withKI(0).withKD(0)
         // .withKS(0.15).withKV(0.11457).withKA(0.003);
+
+        //SJW: TorqueCurrentFOC for Phoenix Pro version
+    // The closed-loop output type to use for the steer motors;
+    // This affects the PID/FF gains for the steer motors
+    private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
+    // The closed-loop output type to use for the drive motors;
+    // This affects the PID/FF gains for the drive motors
+    private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
@@ -37,7 +47,7 @@ public class TunerConstants {
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 0.0;
-    
+
     //https://www.swervedrivespecialties.com/products/mk3-swerve-module?variant=31575980703857
     // MK3 Falcon 13.6 ft/s 8.16:1 or 16.2 ft/s 6.86:1
     private static final double kDriveGearRatio = 6.86; // 8.16;  // 6.86
@@ -57,9 +67,7 @@ public class TunerConstants {
 
     private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
             .withPigeon2Id(kPigeonId)
-            .withSupportsPro(true)
-            .withCANbusName(kCANbusName);
-        
+            .withCANbusName(kCANbusName);        
 
     private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
             .withDriveMotorGearRatio(kDriveGearRatio)
@@ -69,10 +77,12 @@ public class TunerConstants {
             .withSteerMotorGains(steerGains)
             // TODO CHARACTERIZATION comment out
             .withDriveMotorGains(driveGains)
+            .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
+            .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
             .withSpeedAt12VoltsMps(kSpeedAt12VoltsMps)
             .withSteerInertia(kSteerInertia)
             .withDriveInertia(kDriveInertia)
-            .withFeedbackSource(SwerveModuleSteerFeedbackType.FusedCANcoder)
+            .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
             .withCouplingGearRatio(kCoupleRatio)
             .withSteerMotorInverted(kSteerMotorReversed);
 

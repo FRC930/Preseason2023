@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  */
 public class SwerveDrivetrainSubsystem extends SwerveDrivetrain implements Subsystem {
     
-    private SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private Field2d pp_field2d = new Field2d(); // TODO: Move to AutoCommandManager
 
     public SwerveDrivetrainSubsystem(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
@@ -50,8 +50,8 @@ public class SwerveDrivetrainSubsystem extends SwerveDrivetrain implements Subsy
             new HolonomicPathFollowerConfig(
                 new PIDConstants(1, 0, 0), // TODO: Config
                 new PIDConstants(1, 0, 0), // TODO: Config
-                4.15, // Meters
-                Units.inchesToMeters(11.0), 
+                4.15, // Meters  // TODO get set to correct value
+                Units.inchesToMeters(11.0), // TODO determine 
                                             new ReplanningConfig(),
                                             0.004),
             this);

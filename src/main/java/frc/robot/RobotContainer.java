@@ -5,9 +5,12 @@
 package frc.robot;
 
 import java.rmi.server.UnicastRemoteObject;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -40,9 +43,11 @@ public class RobotContainer {
   /* Setting up bindings for necessary control of the swerve drive platform */
   CommandXboxController joystick = new CommandXboxController(0); // My joystick
   SwerveDrivetrainSubsystem drivetrain = TunerConstants.DriveTrain; // My drivetrain
-  SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withIsOpenLoop(true); // I want field-centric
-                                                                                            // driving in open loop
-  SwerveRequest.RobotCentric straightDrive = new SwerveRequest.RobotCentric().withIsOpenLoop(true);
+  SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      //TODO LOOK AT Generated version -- .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+                                                               // driving in open loop
+  SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   Telemetry logger = new Telemetry(MaxSpeed);
@@ -64,16 +69,16 @@ public class RobotContainer {
     setDefaultDriveTrainCommand(m_robotInCharacterizationMode);
 
     joystick.pov(0).whileTrue(
-      drivetrain.applyRequest(() -> straightDrive.withVelocityX(POV_PERCENT_SPEED * MaxSpeed).withVelocityY(0.0)
+      drivetrain.applyRequest(() -> forwardStraight.withVelocityX(POV_PERCENT_SPEED * MaxSpeed).withVelocityY(0.0)
       ));
     joystick.pov(180).whileTrue(
-      drivetrain.applyRequest(() -> straightDrive.withVelocityX(-POV_PERCENT_SPEED * MaxSpeed).withVelocityY(0.0)
+      drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-POV_PERCENT_SPEED * MaxSpeed).withVelocityY(0.0)
       ));
     joystick.pov(90).whileTrue(
-      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.0).withVelocityY(-POV_PERCENT_SPEED * MaxSpeed)
+      drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.0).withVelocityY(-POV_PERCENT_SPEED * MaxSpeed)
       ));
     joystick.pov(270).whileTrue(
-      drivetrain.applyRequest(() -> straightDrive.withVelocityX(0.0).withVelocityY(POV_PERCENT_SPEED * MaxSpeed)
+      drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.0).withVelocityY(POV_PERCENT_SPEED * MaxSpeed)
       ));
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
