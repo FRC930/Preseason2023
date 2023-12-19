@@ -68,8 +68,13 @@ public class AutoCommandManager {
             CharacterizeAutoCommand.initializeDirection(drivetrain);
         });
     
-        String pathName = "S_Auto";
-        Command planPlanCommand = new PathPlannerAuto(pathName);
+        
+        Command sAutoPlanCommand = new PathPlannerAuto("S_Auto");
+        Command straightForwardPlanCommand = new PathPlannerAuto("StraightForward");
+        Command straightForwardWPosePlanCommand = new PathPlannerAuto("StraightForwardWPose");
+        Command chainPlanCommand = new PathPlannerAuto("Chain");
+        Command chainWPosePlanCommand = new PathPlannerAuto("ChainWPose");
+        
 
         // Add commands to the autonomous command chooser
         m_chooserCharactization.setDefaultOption("None", null);
@@ -82,7 +87,11 @@ public class AutoCommandManager {
             m_chooserCharactization.addOption("Fast-Back", charFastBackCommand);
             m_chooserCharactization.addOption("Write-File", writeJsonFileCommand);
         // } else {
-            m_chooserAuto.addOption("PathPlanner-S_Auto", planPlanCommand);
+            m_chooserAuto.addOption(sAutoPlanCommand.getName(), sAutoPlanCommand);
+            m_chooserAuto.addOption(straightForwardPlanCommand.getName(), straightForwardPlanCommand);
+            m_chooserAuto.addOption(straightForwardWPosePlanCommand.getName(), straightForwardWPosePlanCommand);
+            m_chooserAuto.addOption(chainPlanCommand.getName(), chainPlanCommand);
+            m_chooserAuto.addOption(chainWPosePlanCommand.getName(), chainWPosePlanCommand);
         // }
 
         setChooser(characterizeRobot);
