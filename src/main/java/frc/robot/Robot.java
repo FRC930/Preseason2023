@@ -5,6 +5,8 @@
 package frc.robot;
 
 
+import java.io.File;
+
 import org.littletonrobotics.junction.LogFileUtil;
 // AdvantageKit
 // import edu.wpi.first.wpilibj.TimedRobot;
@@ -15,6 +17,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,7 +53,14 @@ public class Robot extends LoggedRobot {
         break;
     }
     if (isReal()) {
-      Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+      WPILOGWriter writer = new WPILOGWriter(); // Log to a USB stick ("/U/logs")
+      String folder = "/U";
+      File logFolder = new File(folder);
+      if (!logFolder.exists()) {
+        writer = new WPILOGWriter("/home/lvuser");
+        DriverStation.reportWarning("Usb stick not in roborio so not saving logs on /U/logs folder, but in "+folder, false);
+      }
+      Logger.addDataReceiver(writer); 
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
   } else {
