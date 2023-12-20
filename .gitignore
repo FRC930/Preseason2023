@@ -172,3 +172,6 @@ out/
 *-window.json
 
 ctre_sim/
+
+sysid*.json
+FRC*.wpilog

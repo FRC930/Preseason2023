@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.05,
-      "y": 7.4
+      "x": 0.51,
+      "y": 7.0
     },
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "S_Path"
+            "pathName": "Q1_StraightForwardFacing"
           }
         }
       ]

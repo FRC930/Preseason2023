@@ -7,17 +7,20 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
@@ -25,8 +28,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * so it can be used in command-based projects easily.
  */
 public class SwerveDrivetrainSubsystem extends SwerveDrivetrain implements Subsystem {
-
-    private SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    
+    private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private Field2d pp_field2d = new Field2d(); // TODO: Move to AutoCommandManager
 
     public SwerveDrivetrainSubsystem(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
@@ -43,14 +46,14 @@ public class SwerveDrivetrainSubsystem extends SwerveDrivetrain implements Subsy
             ()->this.getState().Pose,
             this::seedFieldRelative,
             this::getCurrentRobotChassisSpeeds,
-            (speeds)->this.setControl(autoRequest.withSpeeds(speeds)),
+            (speeds)->this.setControl(autoRequest.withSpeeds(speeds)),// Consumer of ChassisSpeeds to drive the robot
             new HolonomicPathFollowerConfig(
                 new PIDConstants(1, 0, 0), // TODO: Config
                 new PIDConstants(1, 0, 0), // TODO: Config
-                4.15, // Meters
-                Units.inchesToMeters(11.0), 
-                new ReplanningConfig(), 
-                0.004),
+                4.15, // Meters  // TODO get set to correct value
+                Units.inchesToMeters(11.0), // TODO determine 
+                                            new ReplanningConfig(),
+                                            0.004),
             this);
 
         PathPlannerLogging.setLogTargetPoseCallback((Pose2d targetPose) -> {
@@ -59,13 +62,13 @@ public class SwerveDrivetrainSubsystem extends SwerveDrivetrain implements Subsy
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
-        return new RunCommand(()->{this.setControl(requestSupplier.get());}, this);
+        return run(() -> this.setControl(requestSupplier.get()));
     }
 
     @Override
     public void simulationPeriodic() {
-        /* Assume  */
-        updateSimState(0.02, 12);
+        /* Assume 20ms update rate, get battery voltage from WPILib */
+        updateSimState(0.02, RobotController.getBatteryVoltage());
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
