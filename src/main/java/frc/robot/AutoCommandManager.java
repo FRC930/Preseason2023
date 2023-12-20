@@ -10,6 +10,7 @@ import java.util.Date;
 import org.json.simple.JSONArray;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -21,8 +22,8 @@ import frc.robot.subsystems.SwerveDrivetrainSubsystem;
 
 /** Add your docs here. */
 public class AutoCommandManager {
-    SendableChooser<Command> m_chooserAuto = new SendableChooser<>();
     SendableChooser<Command> m_chooserCharactization = new SendableChooser<>();
+    SendableChooser<Command> m_chooserAuto = new SendableChooser<>();
     SendableChooser<Command> m_chooser = null;
     JSONArray m_slowFTimeEntriesForFront=new JSONArray();
     JSONArray m_slowBTimeEntriesForFront=new JSONArray();
@@ -35,6 +36,40 @@ public class AutoCommandManager {
 
 
     public AutoCommandManager(boolean characterizeRobot, SwerveDrivetrainSubsystem drivetrain) {
+
+        m_chooserCharactization = setupCharacterizationAutos(drivetrain);
+        m_chooserAuto = setupAutos();
+
+        setChooser(characterizeRobot);
+    }
+
+    private SendableChooser<Command> setupAutos() {
+        // SendableChooser<Command> chooserAuto = new SendableChooser<>();
+
+        // // NOTE: or could loop thru these: AutoBuilder.getAllAutoNames()
+        // https://github.com/mjansen4857/pathplanner/commit/f1d17207cea793e12e5beb6af8f4c464f82d03e4
+        // Command sAutoPlanCommand = new PathPlannerAuto("S_Auto");
+        // Command straightForwardPlanCommand = new PathPlannerAuto("StraightForward");
+        // Command straightForwardWPosePlanCommand = new PathPlannerAuto("StraightForwardWPose");
+        // Command chainPlanCommand = new PathPlannerAuto("Chain");
+        // Command chainWPosePlanCommand = new PathPlannerAuto("ChainWPose");
+        // Command straightForwardFacingPosePlanCommand = new PathPlannerAuto("straightForwardFacing");
+
+        // chooserAuto.setDefaultOption("None", null);
+        // chooserAuto.addOption(sAutoPlanCommand.getName(), sAutoPlanCommand);
+        // chooserAuto.addOption(straightForwardPlanCommand.getName(), straightForwardPlanCommand);
+        // chooserAuto.addOption(straightForwardWPosePlanCommand.getName(), straightForwardWPosePlanCommand);
+        // chooserAuto.addOption(chainPlanCommand.getName(), chainPlanCommand);
+        // chooserAuto.addOption(chainWPosePlanCommand.getName(), chainWPosePlanCommand);
+        // chooserAuto.addOption(straightForwardFacingPosePlanCommand.getName(), straightForwardFacingPosePlanCommand);
+
+        // return chooserAuto;
+        return AutoBuilder.buildAutoChooser();
+    }
+
+    private SendableChooser<Command> setupCharacterizationAutos(SwerveDrivetrainSubsystem drivetrain) {
+        SendableChooser<Command> chooserCharacterization = new SendableChooser<>();
+
         // slow-forward
         Command charSlowForwardCommand = new CharacterizeAutoCommand(drivetrain,
             true,false,
@@ -67,36 +102,17 @@ public class AutoCommandManager {
         Command initializeDirectionCommand = new InstantCommand(() -> {
             CharacterizeAutoCommand.initializeDirection(drivetrain);
         });
-    
-        
-        Command sAutoPlanCommand = new PathPlannerAuto("S_Auto");
-        Command straightForwardPlanCommand = new PathPlannerAuto("StraightForward");
-        Command straightForwardWPosePlanCommand = new PathPlannerAuto("StraightForwardWPose");
-        Command chainPlanCommand = new PathPlannerAuto("Chain");
-        Command chainWPosePlanCommand = new PathPlannerAuto("ChainWPose");
-        Command straightForwardFacingPosePlanCommand = new PathPlannerAuto("straightForwardFacing");
-        
 
         // Add commands to the autonomous command chooser
-        m_chooserCharactization.setDefaultOption("None", null);
-        m_chooserAuto.setDefaultOption("None", null);
-        // if(characterizeRobot) {
-            m_chooserCharactization.addOption("Initalize-Direction", initializeDirectionCommand);
-            m_chooserCharactization.addOption("Slow-Forward", charSlowForwardCommand);
-            m_chooserCharactization.addOption("Slow-Back", charSlowBackCommand);
-            m_chooserCharactization.addOption("Fast-Forward", charFastForwardCommand);
-            m_chooserCharactization.addOption("Fast-Back", charFastBackCommand);
-            m_chooserCharactization.addOption("Write-File", writeJsonFileCommand);
-        // } else {
-            m_chooserAuto.addOption(sAutoPlanCommand.getName(), sAutoPlanCommand);
-            m_chooserAuto.addOption(straightForwardPlanCommand.getName(), straightForwardPlanCommand);
-            m_chooserAuto.addOption(straightForwardWPosePlanCommand.getName(), straightForwardWPosePlanCommand);
-            m_chooserAuto.addOption(chainPlanCommand.getName(), chainPlanCommand);
-            m_chooserAuto.addOption(chainWPosePlanCommand.getName(), chainWPosePlanCommand);
-            m_chooserAuto.addOption(straightForwardFacingPosePlanCommand.getName(), straightForwardFacingPosePlanCommand);
-        // }
+        chooserCharacterization.setDefaultOption("None", null);
+        chooserCharacterization.addOption("Initalize-Direction", initializeDirectionCommand);
+        chooserCharacterization.addOption("Slow-Forward", charSlowForwardCommand);
+        chooserCharacterization.addOption("Slow-Back", charSlowBackCommand);
+        chooserCharacterization.addOption("Fast-Forward", charFastForwardCommand);
+        chooserCharacterization.addOption("Fast-Back", charFastBackCommand);
+        chooserCharacterization.addOption("Write-File", writeJsonFileCommand);
 
-        setChooser(characterizeRobot);
+        return chooserCharacterization;
     }
 
     public void setChooser(boolean characterizeRobot) {
