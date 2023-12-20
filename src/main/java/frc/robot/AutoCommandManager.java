@@ -74,6 +74,7 @@ public class AutoCommandManager {
         Command straightForwardWPosePlanCommand = new PathPlannerAuto("StraightForwardWPose");
         Command chainPlanCommand = new PathPlannerAuto("Chain");
         Command chainWPosePlanCommand = new PathPlannerAuto("ChainWPose");
+        Command straightForwardFacingPosePlanCommand = new PathPlannerAuto("straightForwardFacing");
         
 
         // Add commands to the autonomous command chooser
@@ -92,6 +93,7 @@ public class AutoCommandManager {
             m_chooserAuto.addOption(straightForwardWPosePlanCommand.getName(), straightForwardWPosePlanCommand);
             m_chooserAuto.addOption(chainPlanCommand.getName(), chainPlanCommand);
             m_chooserAuto.addOption(chainWPosePlanCommand.getName(), chainWPosePlanCommand);
+            m_chooserAuto.addOption(straightForwardFacingPosePlanCommand.getName(), straightForwardFacingPosePlanCommand);
         // }
 
         setChooser(characterizeRobot);
