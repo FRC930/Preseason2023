@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.CRTMath;
 import frc.robot.utilities.VelocityMeasurer;
 
-public class TurretSubsystem extends SubsystemBase {
+public class TurretSubsystem extends SubsystemBase implements AutoCloseable{
     //#region Constants
-    private static final double REDUCTION_LEFT = 0.2;
-    private static final double REDUCTION_RIGHT = 0.21; 
+    public static final double REDUCTION_LEFT = 0.2;
+    public static final double REDUCTION_RIGHT = 0.21; 
     //#endregion
 
     //#region Hardware
@@ -24,6 +24,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     private final AbsoluteEncoder encoderL;
     private final AbsoluteEncoder encoderR;
+    
     //#endregion
 
     //I store the position to avoid having to call getPosition twice per tick. 
@@ -56,6 +57,7 @@ public class TurretSubsystem extends SubsystemBase {
      * <h3>getRawPosition</h3>
      * Gets the position of the turret using Chinese Remainder Theorem.
      * <p>Freshly caluclates the position rather than using the value cached by periodic().
+     * <p>Only use if you know EXACTLY what you're doing. Use getPosition() otherwise
      * @return The position in degrees
      */
     public double getRawPosition() {
@@ -89,5 +91,11 @@ public class TurretSubsystem extends SubsystemBase {
     public void periodic() {
         currentPosition = CRTMath.crt(encoderL.getPosition(),encoderR.getPosition(),REDUCTION_LEFT,REDUCTION_RIGHT);
         velocityMeasurer.saveVal(currentPosition);
+    }
+
+    @Override
+    public void close() throws Exception {
+        motorL.close();
+        motorR.close();
     }
 }

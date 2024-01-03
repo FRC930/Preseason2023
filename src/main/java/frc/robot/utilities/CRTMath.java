@@ -1,6 +1,6 @@
 package frc.robot.utilities;
 
-public final class CRTMath {
+public abstract class CRTMath {
     
 
 
@@ -14,6 +14,8 @@ public final class CRTMath {
      * @param rightReduction The gear ratio of the right encoder to the central gear.
      * @return The angle of the center gear.
      */
+    //TODO: More test cases
+    //TODO: Figure out why this is returning twice normal 
     public static double crt(double left, double right, double leftReduction, double rightReduction) {
         final int ticks = 8192;
         int lastPosition = -1;
@@ -43,7 +45,7 @@ public final class CRTMath {
             int nextPosition = (int)((firstA+tickrement)*firstR+.5);
             double possibleSolution = (lastA+tickrement)*lastR;
             if (((int)(possibleSolution+.5)) == nextPosition || ((int)(possibleSolution+.5)) == lastPosition) {
-                return possibleSolution*(360.0/ticks);
+                return possibleSolution*(360.0/ticks); 
             }
             
             lastPosition = nextPosition;
