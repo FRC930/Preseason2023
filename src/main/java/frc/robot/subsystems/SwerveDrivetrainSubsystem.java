@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -52,9 +53,20 @@ public class SwerveDrivetrainSubsystem extends SwerveDrivetrain implements Subsy
                 new PIDConstants(1, 0, 0), // TODO: Config
                 4.15, // Meters  // TODO get set to correct value
                 Units.inchesToMeters(11.0), // TODO determine 
-                                            new ReplanningConfig(),
-                                            0.004),
-            this);
+                new ReplanningConfig(),
+                0.004),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this);
 
         PathPlannerLogging.setLogTargetPoseCallback((Pose2d targetPose) -> {
             pp_field2d.setRobotPose(targetPose);
